@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter create:*)",
+      "Bash(rm:*)",
+      "Bash(flutter pub:*)",
+      "Bash(winget install:*)",
+      "Bash(choco install:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(mkdir:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(cp:*)"
+    ],
+    "deny": []
+  }
+}

@@ -1,0 +1,43 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+coverage/
+devtools_options.yaml
+
+# Android Studio related
+*.iml
+.gradle/
+.idea/
+android/local.properties
+android/build/
+
+# OS related files
+.DS_Store
+Thumbs.db
+
+# Build directories
+**/build/
+/captures
+
+# Generated files
+pubspec.lock
+
+# Temporary files
+*.log
+*.tmp
+temp_fix.dart
+
+# Local configuration
+local.properties
+
+# Kotlin related
+.kotlin/
+
+# External native build
+.externalNativeBuild
+.cxx

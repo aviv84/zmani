@@ -1,0 +1,53 @@
+{
+  "synagogueName": "בית הכנסת שערי צדק ע\"ש הרב סעדיה חוזה זצוק\"ל",
+  "synagogueSlogan": "בית תפילה לכל העמים",
+  "logoPath": null,
+  "hebrewDate": {
+    "day": "י\"ח",
+    "month": "אב",
+    "year": "תשפ\"ה",
+    "fullDate": "י\"ח אב תשפ\"ה"
+  },
+  "parasha": "פרשת ראה",
+  "weekdayTimes": {
+    "sunrise": "06:15",
+    "sunset": "19:35",
+    "mincha": "19:00",
+    "maariv": "20:10",
+    "shachrit": "06:30",
+    "mincha2": "13:00"
+  },
+  "shabbatTimes": {
+    "sunrise": "06:15",
+    "sunset": "19:35",
+    "mincha": "18:30",
+    "maariv": "20:45",
+    "shachrit": "09:00"
+  },
+  "messages": [
+    "ברוכים הבאים לבית הכנסת שלנו",
+    "תפילת מנחה בימי חול בשעה 19:00",
+    "שיעור תורה בכל יום ראשון בשעה 20:30",
+    "הרשמה לקידוש שבת פתוחה"
+  ],
+  "dailyLearning": "הלכות שבת - הלכה יומית: דיני הבדלה וסעודה שלישית. חכמים קבעו שיש לעשות הבדלה על כוס יין ולזכור את קדושת השבת גם בצאתה.",
+  "yahrzeits": [
+    {
+      "name": "אברהם בן יצחק",
+      "date": "2024-08-13T00:00:00.000Z",
+      "isCurrentWeek": true
+    },
+    {
+      "name": "שרה בת משה",
+      "date": "2024-08-16T00:00:00.000Z",
+      "isCurrentWeek": true
+    }
+  ],
+  "currentTheme": {
+    "name": "default",
+    "backgroundImage": null,
+    "backgroundColor": 4294967295,
+    "textColor": 4278190080,
+    "accentColor": 4280391411
+  }
+}
