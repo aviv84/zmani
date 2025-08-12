@@ -6,6 +6,7 @@ import '../widgets/footer_widget.dart';
 import '../widgets/slide_content.dart';
 import '../models/display_data.dart';
 import '../services/data_service.dart';
+import '../services/daily_learning_service.dart';
 import 'dart:async';
 
 class DisplayScreen extends StatefulWidget {
@@ -47,6 +48,9 @@ class _DisplayScreenState extends State<DisplayScreen> {
     
     // Load real Hebrew date separately to update UI
     _loadHebrewDate();
+    
+    // Load daily learning content immediately
+    _loadDailyLearning();
   }
   
   void _loadHebrewDate() async {
@@ -65,6 +69,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
           final hebrewDay = _convertToHebrewNumber(apiData['hd']);
           final hebrewMonth = _convertMonthToHebrew(apiData['hm']); // Convert to Hebrew
           final hebrewYear = _convertYearToHebrew(apiData['hy']);
+          final hebrewDayOfWeek = _getHebrewDayOfWeek(now.weekday);
           
           // Extract parasha from API events
           String parasha = _displayData!.parasha; // fallback
@@ -84,7 +89,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
             day: hebrewDay,
             month: hebrewMonth,
             year: hebrewYear,
-            fullDate: '$hebrewDay $hebrewMonth $hebrewYear',
+            fullDate: '$hebrewDayOfWeek, $hebrewDay $hebrewMonth $hebrewYear',
           );
           
           setState(() {
@@ -193,6 +198,48 @@ class _DisplayScreenState extends State<DisplayScreen> {
     };
     
     return parashaMap[englishName] ?? englishName;
+  }
+  
+  String _getHebrewDayOfWeek(int weekday) {
+    // Convert weekday number to Hebrew day name
+    const dayMap = {
+      1: 'יום שני',    // Monday
+      2: 'יום שלישי',  // Tuesday  
+      3: 'יום רביעי',   // Wednesday
+      4: 'יום חמישי',   // Thursday
+      5: 'יום שישי',    // Friday
+      6: 'שבת קודש',    // Saturday
+      7: 'יום ראשון',   // Sunday
+    };
+    
+    return dayMap[weekday] ?? 'יום';
+  }
+  
+  void _loadDailyLearning() async {
+    try {
+      final dailyLearning = await DailyLearningService.getDailyLearning();
+      
+      // Update the display data with new daily learning
+      if (_displayData != null) {
+        setState(() {
+          _displayData = DisplayData(
+            synagogueName: _displayData!.synagogueName,
+            synagogueSlogan: _displayData!.synagogueSlogan,
+            logoPath: _displayData!.logoPath,
+            hebrewDate: _displayData!.hebrewDate,
+            parasha: _displayData!.parasha,
+            weekdayTimes: _displayData!.weekdayTimes,
+            shabbatTimes: _displayData!.shabbatTimes,
+            messages: _displayData!.messages,
+            dailyLearning: dailyLearning,
+            yahrzeits: _displayData!.yahrzeits,
+            currentTheme: _displayData!.currentTheme,
+          );
+        });
+      }
+    } catch (e) {
+      print('Error loading daily learning: $e');
+    }
   }
 
   void _startClockTimer() {

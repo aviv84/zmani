@@ -20,7 +20,7 @@ class SlideContent extends StatelessWidget {
     
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: displayData.currentTheme.backgroundColor,
         image: displayData.currentTheme.backgroundImage != null
@@ -36,19 +36,18 @@ class SlideContent extends StatelessWidget {
   }
 
   Widget _buildPortraitLayout() {
-    return SingleChildScrollView( // Added SingleChildScrollView
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildPrayerTimes(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
           _buildMessages(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
           _buildDailyLearning(),
-          if (_shouldShowYahrzeits()) ...[
-            const SizedBox(height: 30),
-            _buildYahrzeits(),
-          ],
+          const SizedBox(height: 15),
+          _buildYahrzeits(), // Always show
+          const SizedBox(height: 15), // Bottom padding
         ],
       ),
     );
@@ -56,28 +55,38 @@ class SlideContent extends StatelessWidget {
 
   Widget _buildLandscapeLayout() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Left column - Prayer Times (25% width)
         Expanded(
           flex: 1,
-          child: _buildPrayerTimes(), // This might also need to be scrollable depending on content
+          child: _buildPrayerTimes(),
         ),
-        const SizedBox(width: 30),
+        const SizedBox(width: 10),
+        
+        // Middle column - Messages (35% width)
+        Expanded(
+          flex: 1,
+          child: _buildMessages(),
+        ),
+        const SizedBox(width: 10),
+        
+        // Right column - Learning and Yahrzeits (40% width)
         Expanded(
           flex: 2,
-          child: SingleChildScrollView( // Added SingleChildScrollView here
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildMessages(),
-                const SizedBox(height: 30),
-                _buildDailyLearning(),
-                if (_shouldShowYahrzeits()) ...[
-                  const SizedBox(height: 30),
-                  _buildYahrzeits(),
-                ],
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 3,
+                child: _buildDailyLearning(),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                flex: 2,
+                child: _buildYahrzeits(), // Always show
+              ),
+            ],
           ),
         ),
       ],
@@ -97,19 +106,19 @@ class SlideContent extends StatelessWidget {
       elevation: 4,
       color: displayData.currentTheme.backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: displayData.currentTheme.textColor,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             _buildPrayerTimeRow('זריחה', prayerTimes.sunrise),
             if (prayerTimes.shachrit != null)
               _buildPrayerTimeRow('שחרית', prayerTimes.shachrit!),
@@ -155,19 +164,19 @@ class SlideContent extends StatelessWidget {
       elevation: 4,
       color: displayData.currentTheme.backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'הודעות הנהלה',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: displayData.currentTheme.textColor,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             if (displayData.messages.isEmpty)
               Text(
                 'אין הודעות חדשות',
@@ -213,19 +222,19 @@ class SlideContent extends StatelessWidget {
       elevation: 4,
       color: displayData.currentTheme.backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               slideType == SlideType.shabbat ? 'לימוד שבת' : 'הלכה יומית',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: displayData.currentTheme.textColor,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             Text(
               displayData.dailyLearning,
               style: TextStyle(
@@ -245,47 +254,64 @@ class SlideContent extends StatelessWidget {
         .where((y) => y.isCurrentWeek)
         .toList();
 
-    if (currentWeekYahrzeits.isEmpty) return const SizedBox.shrink();
-
     return Card(
       elevation: 4,
       color: displayData.currentTheme.backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'יארצייט השבוע',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: displayData.currentTheme.textColor,
               ),
             ),
-            const SizedBox(height: 16),
-            ...currentWeekYahrzeits.map((yahrzeit) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    yahrzeit.name,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: displayData.currentTheme.textColor,
+            const SizedBox(height: 12),
+            Expanded(
+              child: currentWeekYahrzeits.isEmpty
+                  ? Center(
+                      child: Text(
+                        'אין יארצייט השבוע',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          color: displayData.currentTheme.textColor.withOpacity(0.7),
+                        ),
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: currentWeekYahrzeits.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final yahrzeit = currentWeekYahrzeits[index];
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                yahrzeit.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: displayData.currentTheme.textColor,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '${yahrzeit.date.day}/${yahrzeit.date.month}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: displayData.currentTheme.accentColor,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
-                  ),
-                  Text(
-                    '${yahrzeit.date.day}/${yahrzeit.date.month}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: displayData.currentTheme.accentColor,
-                    ),
-                  ),
-                ],
-              ),
-            )),
+            ),
           ],
         ),
       ),

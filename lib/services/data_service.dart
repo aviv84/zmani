@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/display_data.dart';
 import 'hebrew_calendar_service.dart';
 import 'prayer_times_service.dart';
+import 'daily_learning_service.dart';
 
 class DataService {
   static const String _localDataKey = 'zmani_display_data';
@@ -111,7 +112,7 @@ class DataService {
         'שיעור תורה בכל יום ראשון בשעה 20:30',
         'הרשמה לקידוש שבת פתוחה'
       ],
-      dailyLearning: 'הלכה יומית - ${currentHebrewDate['fullDate']}: דיני תפילה וברכות. חשיבות הכוונה בתפילה ומשמעות הברכות היומיות.',
+      dailyLearning: 'טוען תוכן לימוד יומי...',
       yahrzeits: [
         Yahrzeit(
           name: 'אברהם בן יצחק',
@@ -177,6 +178,8 @@ class DataService {
     // For August 12, 2025, we need to calculate the Hebrew date properly
     // Today (12/08/2025) should be 18 Av 5785
     
+    final hebrewDayOfWeek = _getHebrewDayOfWeek(date.weekday);
+    
     // Hardcode the correct date for now - in production use proper Hebrew calendar calculation
     if (date.year == 2025 && date.month == 8) {
       final hebrewDay = _convertToHebrewNumber(date.day + 6); // Approximate offset for Av 5785
@@ -184,7 +187,7 @@ class DataService {
         'day': hebrewDay,
         'month': 'אב',
         'year': 'תשפ"ה', 
-        'fullDate': '$hebrewDay אב תשפ"ה',
+        'fullDate': '$hebrewDayOfWeek, $hebrewDay אב תשפ"ה',
       };
     }
     
@@ -196,8 +199,23 @@ class DataService {
       'day': hebrewDay,
       'month': hebrewMonth,
       'year': 'תשפ"ה', 
-      'fullDate': '$hebrewDay $hebrewMonth תשפ"ה',
+      'fullDate': '$hebrewDayOfWeek, $hebrewDay $hebrewMonth תשפ"ה',
     };
+  }
+  
+  static String _getHebrewDayOfWeek(int weekday) {
+    // Convert weekday number to Hebrew day name
+    const dayMap = {
+      1: 'יום שני',    // Monday
+      2: 'יום שלישי',  // Tuesday  
+      3: 'יום רביעי',   // Wednesday
+      4: 'יום חמישי',   // Thursday
+      5: 'יום שישי',    // Friday
+      6: 'שבת קודש',    // Saturday
+      7: 'יום ראשון',   // Sunday
+    };
+    
+    return dayMap[weekday] ?? 'יום';
   }
   
   static String _convertToHebrewNumber(int number) {
